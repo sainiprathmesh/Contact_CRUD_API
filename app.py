@@ -12,20 +12,19 @@ def hello_world():
 
 @app.route('/record/new', methods=['POST'])
 def add_record():
-    # Get item from the POST body
+    # Get record from the POST body
     # only pass '{"contact_name": "Name", "contact_email_id": "mail_id", "contact_number": "phone_number"}
     req_data = request.get_json()
-    record_id = helper.create_record_id()
     contact_name = req_data['contact_name']
     contact_email_id = req_data['contact_email_id']
     contact_number = req_data['contact_number']
 
-    # Add item to the list
-    res_data = helper.add_to_database(record_id, contact_name, contact_email_id, contact_number)
+    # Add record to the database
+    res_data = helper.add_to_database(contact_name, contact_email_id, contact_number)
 
     # Return error if item not added
     if res_data is None:
-        response = Response("{'error': 'Record not added - '}" + record_id, status=400, mimetype='application/json')
+        response = Response("{'error': 'Record-22 not added - '}", status=400, mimetype='application/json')
         return response
 
     # Return response
@@ -36,8 +35,9 @@ def add_record():
 
 @app.route('/record/all')
 def get_all_items():
-    # Get items from the helper
-    res_data = helper.get_all_records()
+    page = request.args.get('page_no')
+    # Get records from the helper
+    res_data = helper.get_all_records(int(page))
     # Return response
     response = Response(json.dumps(res_data), mimetype='application/json')
     return response
@@ -48,8 +48,10 @@ def get_item_by_name():
     # Get parameter from the URL
     contact_name = request.args.get('contact_name')
 
-    # Get items from the helper
-    status = helper.get_record_by_name(contact_name)
+    page = request.args.get('page')
+
+    # Get records from the helper
+    status = helper.get_record_by_name(contact_name, page)
 
     # Return 404 if item not found
     if status is None:
@@ -62,7 +64,7 @@ def get_item_by_name():
     }
 
     response = Response(json.dumps(res_data), status=200, mimetype='application/json')
-    return response
+    return response, page
 
 
 @app.route('/record/status/by_mail', methods=['GET'])
@@ -70,7 +72,7 @@ def get_item_by_mail():
     # Get parameter from the URL
     contact_email_id = request.args.get('contact_email_id')
 
-    # Get items from the helper
+    # Get records from the helper
     status = helper.get_record_by_mail(contact_email_id)
 
     # Return 404 if item not found
@@ -90,14 +92,14 @@ def get_item_by_mail():
 
 @app.route('/record/update', methods=['PUT'])
 def update_record():
-    # Get item from the POST body
+    # Get record from the POST body
     req_data = request.get_json()
     record_id = req_data['record_id']
     new_contact_name = req_data['new_contact_name']
     new_contact_mail = req_data['new_contact_mail']
     new_contact_number = req_data['new_contact_number']
 
-    # Update item in the list
+    # Update record in the database
     res_data = helper.update_record(record_id, new_contact_name, new_contact_mail, new_contact_number)
     if res_data is None:
         response = Response("{'error': 'Error updating record - '" + record_id + ", " + new_contact_name + "}",
@@ -113,11 +115,11 @@ def update_record():
 
 @app.route('/record/remove', methods=['DELETE'])
 def delete_record():
-    # Get item from the POST body
+    # Get record from the POST body
     req_data = request.get_json()
     record_id = req_data['record_id']
 
-    # Delete item from the list
+    # Delete record from the database
     res_data = helper.delete_record(record_id)
     if res_data is None:
         response = Response("{'error': 'Error deleting item - '" + record_id + "}", status=400,

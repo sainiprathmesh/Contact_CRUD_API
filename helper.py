@@ -1,59 +1,52 @@
 import sqlite3
 
 DB_PATH = './Contact_API.db'
-NOTSTARTED = 'Not Started'
-INPROGRESS = 'In Progress'
-COMPLETED = 'Completed'
 
 
-def create_record_id():
-    rec_id = 'CAPI_'
+def pagination(page, json):
+    start = ((page - 1) * 3)
+    end = page * 3
+    return json[start:end]
+
+
+def add_to_database(contact_name, contact_email_id, contact_number):
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
-        cur.execute('select * from records')
-        rows = cur.fetchall()
-        rec_id = rec_id + str(len(rows) + 1)
-        return rec_id
-    except Exception as e:
-        print('Error: ', e)
-        return None
-
-
-def add_to_database(record_id, contact_name, contact_email_id, contact_number):
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute('insert into records(record_id, contact_name, contact_email_id, contact_number) values(?,?,?,?)',
-                    (record_id, contact_name, contact_email_id, contact_number))
+        print("hi")
+        cur.execute('insert into records(contact_name, contact_email_id, contact_number) values(?,?,?)',
+                    (contact_name, contact_email_id, contact_number))
         conn.commit()
-        return {"record_id": record_id, "contact_name": contact_name, "contact_email_id": contact_email_id,
+        cur.execute('select max(record_id) from records')
+        rows = cur.fetchall()
+
+        return {"record_id": rows[0][0], "contact_name": contact_name, "contact_email_id": contact_email_id,
                 "contact_number": contact_number}
     except Exception as e:
         print('Error: ', e)
         return None
 
 
-def get_all_records():
+def get_all_records(page):
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
         cur.execute('select * from records')
         rows = cur.fetchall()
-        return {"count": len(rows), "items": rows}
+        return pagination(page, rows)
+        # return {"count": len(rows), "items": rows}
     except Exception as e:
         print('Error: ', e)
         return None
 
 
-def get_record_by_name(contact_name):
+def get_record_by_name(contact_name, page):
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
-        cur.execute("select * from records where contact_name='%s'" % contact_name)
+        cur.execute(f"select * from records where contact_name like '%{contact_name}%'")
         status = cur.fetchall()
-        print(status)
-        return status
+        return pagination(page, status)
     except Exception as e:
         print('Error: ', e)
         return None

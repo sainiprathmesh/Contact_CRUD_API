@@ -87,6 +87,24 @@ def get_item_by_mail():
     return response
 
 
+@app.route('/record/remove', methods=['DELETE'])
+def delete_record():
+    # Get item from the POST body
+    req_data = request.get_json()
+    record_id = req_data['record_id']
+
+    # Delete item from the list
+    res_data = helper.delete_record(record_id)
+    if res_data is None:
+        response = Response("{'error': 'Error deleting item - '" + record_id + "}", status=400, mimetype='application/json')
+        return response
+
+    # Return response
+    response = Response(json.dumps(res_data), mimetype='application/json')
+
+    return response
+
+
 
 if __name__ == '__main__':
     app.run()

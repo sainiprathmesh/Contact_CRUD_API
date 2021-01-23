@@ -46,4 +46,5 @@
 <h2>For Deleting Record by record_id:</h2>
 <code>$ curl -X DELETE http://127.0.0.1:5000/record/remove -d '{"record_id": 9}' -H 'Content-Type: application/json'</code>
 
+<h1>Note : All validation of data will be done on client side.</h1>
 

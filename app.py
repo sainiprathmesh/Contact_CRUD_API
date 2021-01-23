@@ -88,6 +88,29 @@ def get_item_by_mail():
     return response
 
 
+@app.route('/record/update', methods=['PUT'])
+def update_record():
+    # Get item from the POST body
+    req_data = request.get_json()
+    record_id = req_data['record_id']
+    new_contact_name = req_data['new_contact_name']
+    new_contact_mail = req_data['new_contact_mail']
+    new_contact_number = req_data['new_contact_number']
+
+    # Update item in the list
+    res_data = helper.update_record(record_id, new_contact_name, new_contact_mail, new_contact_number)
+    if res_data is None:
+        response = Response("{'error': 'Error updating record - '" + record_id + ", " + new_contact_name + "}",
+                            status=400,
+                            mimetype='application/json')
+        return response
+
+    # Return response
+    response = Response(json.dumps(res_data), mimetype='application/json')
+
+    return response
+
+
 @app.route('/record/remove', methods=['DELETE'])
 def delete_record():
     # Get item from the POST body

@@ -20,16 +20,18 @@ def create_record_id():
         return None
 
 
-def add_to_database(record):
+def add_to_database(record_id, contact_name, contact_email_id, contact_number):
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
         cur.execute('insert into records(record_id, contact_name, contact_email_id, contact_number) values(?,?,?,?)',
-                    record)
+                    (record_id, contact_name, contact_email_id, contact_number))
         conn.commit()
-        return {"record": record}
+        return {"record_id": record_id, "contact_name": contact_name, "contact_email_id": contact_email_id,
+                "contact_number": contact_number}
     except Exception as e:
         print('Error: ', e)
         return None
+
 
 

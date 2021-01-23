@@ -14,7 +14,7 @@
 
 <h3>1. I use SQLite for database connectivity.</h3>
 <h3>2. I make contact_email_id as unique key for reducing the complexity.</h3>
-<h3>3. We can use reddit for O(1) complexity in insertion and searching. (Paid Service)</h3>
+<h3>3. We can use redis for O(1) complexity in insertion and searching. (Paid Service)</h3>
 
 <h1>For testing the code :</h1>
 

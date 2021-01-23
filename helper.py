@@ -24,6 +24,12 @@ def add_to_database(record):
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
+        cur.execute('insert into records(record_id, contact_name, contact_email_id, contact_number) values(?,?,?,?)',
+                    record)
+        conn.commit()
+        return {"record": record}
     except Exception as e:
         print('Error: ', e)
         return None
+
+

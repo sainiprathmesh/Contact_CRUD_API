@@ -37,9 +37,31 @@ def add_record():
 @app.route('/record/all')
 def get_all_items():
     # Get items from the helper
-    res_data = helper.get_all_items()
+    res_data = helper.get_all_records()
     # Return response
     response = Response(json.dumps(res_data), mimetype='application/json')
+    return response
+
+
+@app.route('/record/status', methods=['GET'])
+def get_item_by_name():
+    # Get parameter from the URL
+    contact_name = request.args.get('contact_name')
+
+    # Get items from the helper
+    status = helper.get_item_by_name(contact_name)
+
+    # Return 404 if item not found
+    if status is None:
+        response = Response("{'error': 'Item Not Found - '}" + contact_name, status=404, mimetype='application/json')
+        return response
+
+    # Return status
+    res_data = {
+        'status': status
+    }
+
+    response = Response(json.dumps(res_data), status=200, mimetype='application/json')
     return response
 
 

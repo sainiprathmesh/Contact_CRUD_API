@@ -34,7 +34,7 @@ def add_to_database(record_id, contact_name, contact_email_id, contact_number):
         return None
 
 
-def get_all_items():
+def get_all_records():
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
@@ -46,4 +46,15 @@ def get_all_items():
         return None
 
 
-print(get_all_items())
+def get_item_by_name(contact_name):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute("select * from records where contact_name='%s'" % contact_name)
+        status = cur.fetchall()
+        print(status)
+        return status
+    except Exception as e:
+        print('Error: ', e)
+        return None
+

@@ -36,7 +36,6 @@ def add_record():
 @app.route('/record/all')
 def get_all_items():
     page = request.args.get('page_no')
-    # Get records from the helper
     res_data = helper.get_all_records(int(page))
     # Return response
     response = Response(json.dumps(res_data), mimetype='application/json')
@@ -48,10 +47,8 @@ def get_item_by_name():
     # Get parameter from the URL
     contact_name = request.args.get('contact_name')
 
-    page = request.args.get('page')
-
     # Get records from the helper
-    status = helper.get_record_by_name(contact_name, page)
+    status = helper.get_record_by_name(contact_name)
 
     # Return 404 if item not found
     if status is None:
@@ -64,7 +61,7 @@ def get_item_by_name():
     }
 
     response = Response(json.dumps(res_data), status=200, mimetype='application/json')
-    return response, page
+    return response
 
 
 @app.route('/record/status/by_mail', methods=['GET'])

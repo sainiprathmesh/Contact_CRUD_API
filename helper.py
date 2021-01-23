@@ -3,9 +3,10 @@ import sqlite3
 DB_PATH = './Contact_API.db'
 
 
+# for pagination of 10 data per page
 def pagination(page, json):
-    start = ((page - 1) * 3)
-    end = page * 3
+    start = ((page - 1) * 10)
+    end = page * 10
     return json[start:end]
 
 
@@ -27,6 +28,7 @@ def add_to_database(contact_name, contact_email_id, contact_number):
         return None
 
 
+# pass page number
 def get_all_records(page):
     try:
         conn = sqlite3.connect(DB_PATH)
@@ -34,24 +36,25 @@ def get_all_records(page):
         cur.execute('select * from records')
         rows = cur.fetchall()
         return pagination(page, rows)
-        # return {"count": len(rows), "items": rows}
     except Exception as e:
         print('Error: ', e)
         return None
 
 
-def get_record_by_name(contact_name, page):
+# pass contact name as argument
+def get_record_by_name(contact_name):
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
         cur.execute(f"select * from records where contact_name like '%{contact_name}%'")
         status = cur.fetchall()
-        return pagination(page, status)
+        return status
     except Exception as e:
         print('Error: ', e)
         return None
 
 
+# pass contact mail id as argument
 def get_record_by_mail(contact_email_id):
     try:
         conn = sqlite3.connect(DB_PATH)
@@ -65,6 +68,7 @@ def get_record_by_mail(contact_email_id):
         return None
 
 
+# for update record enter record_id, new contact name, new contact email, new contact number
 def update_record(record_id, new_contact_name, new_contact_email, new_contact_number):
     try:
         conn = sqlite3.connect(DB_PATH)
@@ -78,6 +82,7 @@ def update_record(record_id, new_contact_name, new_contact_email, new_contact_nu
         return None
 
 
+# for deleting the record pass record_id as argument.
 def delete_record(record_id):
     try:
         conn = sqlite3.connect(DB_PATH)

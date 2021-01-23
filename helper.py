@@ -33,12 +33,17 @@ def add_to_database(record_id, contact_name, contact_email_id, contact_number):
         print('Error: ', e)
         return None
 
+
 def get_all_items():
     try:
         conn = sqlite3.connect(DB_PATH)
-
-
+        cur = conn.cursor()
+        cur.execute('select * from records')
+        rows = cur.fetchall()
+        return {"count": len(rows), "items": rows}
     except Exception as e:
         print('Error: ', e)
         return None
 
+
+print(get_all_items())

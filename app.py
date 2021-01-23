@@ -43,13 +43,13 @@ def get_all_items():
     return response
 
 
-@app.route('/record/status', methods=['GET'])
+@app.route('/record/status/by_name', methods=['GET'])
 def get_item_by_name():
     # Get parameter from the URL
     contact_name = request.args.get('contact_name')
 
     # Get items from the helper
-    status = helper.get_item_by_name(contact_name)
+    status = helper.get_record_by_name(contact_name)
 
     # Return 404 if item not found
     if status is None:
@@ -63,6 +63,29 @@ def get_item_by_name():
 
     response = Response(json.dumps(res_data), status=200, mimetype='application/json')
     return response
+
+
+@app.route('/record/status/by_mail', methods=['GET'])
+def get_item_by_mail():
+    # Get parameter from the URL
+    contact_email_id = request.args.get('contact_email_id')
+
+    # Get items from the helper
+    status = helper.get_record_by_mail(contact_email_id)
+
+    # Return 404 if item not found
+    if status is None:
+        response = Response("{'error': 'Item Not Found - '}" + contact_email_id, status=404, mimetype='application/json')
+        return response
+
+    # Return status
+    res_data = {
+        'status': status
+    }
+
+    response = Response(json.dumps(res_data), status=200, mimetype='application/json')
+    return response
+
 
 
 if __name__ == '__main__':

@@ -46,7 +46,7 @@ def get_all_records():
         return None
 
 
-def get_item_by_name(contact_name):
+def get_record_by_name(contact_name):
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
@@ -58,3 +58,31 @@ def get_item_by_name(contact_name):
         print('Error: ', e)
         return None
 
+
+def get_record_by_mail(contact_email_id):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute("select * from records where contact_email_id='%s'" % contact_email_id)
+        status = cur.fetchall()
+        print(status)
+        return status
+    except Exception as e:
+        print('Error: ', e)
+        return None
+
+
+def delete_record(record_id):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute('delete from records where record_id=?', (record_id,))
+        conn.commit()
+        if cur:
+            return {'record_id': record_id}
+    except Exception as e:
+        print('Error: ', e)
+        return None
+
+
+print(delete_record("CAPI_12"))

@@ -13,6 +13,7 @@ def hello_world():
 @app.route('/record/new', methods=['POST'])
 def add_record():
     # Get item from the POST body
+    # only pass '{"contact_name": "Name", "contact_email_id": "mail_id", "contact_number": "phone_number"}
     req_data = request.get_json()
     record_id = helper.create_record_id()
     contact_name = req_data['contact_name']
@@ -31,6 +32,7 @@ def add_record():
     response = Response(json.dumps(res_data), mimetype='application/json')
 
     return response
+
 
 
 

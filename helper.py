@@ -72,6 +72,19 @@ def get_record_by_mail(contact_email_id):
         return None
 
 
+def update_record(record_id, new_contact_name, new_contact_email, new_contact_number):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute('update records set contact_name=?,contact_email_id=?,contact_number=? where record_id=?',
+                    (new_contact_name, new_contact_email,new_contact_number, record_id))
+        conn.commit()
+        return {record_id: new_contact_name}
+    except Exception as e:
+        print('Error: ', e)
+        return None
+
+
 def delete_record(record_id):
     try:
         conn = sqlite3.connect(DB_PATH)

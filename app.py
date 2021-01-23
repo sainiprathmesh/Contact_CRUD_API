@@ -75,7 +75,8 @@ def get_item_by_mail():
 
     # Return 404 if item not found
     if status is None:
-        response = Response("{'error': 'Item Not Found - '}" + contact_email_id, status=404, mimetype='application/json')
+        response = Response("{'error': 'Item Not Found - '}" + contact_email_id, status=404,
+                            mimetype='application/json')
         return response
 
     # Return status
@@ -96,14 +97,14 @@ def delete_record():
     # Delete item from the list
     res_data = helper.delete_record(record_id)
     if res_data is None:
-        response = Response("{'error': 'Error deleting item - '" + record_id + "}", status=400, mimetype='application/json')
+        response = Response("{'error': 'Error deleting item - '" + record_id + "}", status=400,
+                            mimetype='application/json')
         return response
 
     # Return response
     response = Response(json.dumps(res_data), mimetype='application/json')
 
     return response
-
 
 
 if __name__ == '__main__':
